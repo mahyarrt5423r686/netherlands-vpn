@@ -1,0 +1,57 @@
+name: Build Netherlands VPN APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master, netherlands-vpn ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Determine project root
+        id: proj
+        run: |
+          if [ -f "app/build.gradle" ]; then
+            echo "root=." >> $GITHUB_OUTPUT
+          else
+            echo "root=NetherlandsVPN" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download libv2ray.aar
+        run: |
+          ROOT=${{ steps.proj.outputs.root }}
+          mkdir -p $ROOT/app/libs
+          cd $ROOT/app/libs
+          curl -L -o libv2ray.aar https://github.com/2dust/AndroidLibXrayLite/releases/download/1.8.11/libv2ray.aar || \
+          wget -q https://github.com/2dust/AndroidLibXrayLite/releases/download/1.8.14/libv2ray.aar -O libv2ray.aar
+          ls -lh
+
+      - name: Grant gradlew permission
+        run: |
+          ROOT=${{ steps.proj.outputs.root }}
+          chmod +x $ROOT/gradlew
+
+      - name: Build Debug APK
+        run: |
+          ROOT=${{ steps.proj.outputs.root }}
+          cd $ROOT
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: NetherlandsVPN-APK-mahyar1
+          path: "**/build/outputs/apk/debug/*.apk"
