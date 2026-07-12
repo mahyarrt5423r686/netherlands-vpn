@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netherlands VPN - ساخته شده بر پایه v2rayNG</title>
+<style>
+body{font-family: Vazirmatn, Tahoma, sans-serif;background:#f5f7fb;margin:0;padding:0;color:#222;line-height:1.7}
+.container{max-width:900px;margin:0 auto;padding:24px}
+.header{background:linear-gradient(135deg,#21468B,#AE1C28);color:white;padding:40px 24px;border-radius:20px;text-align:center}
+.header h1{margin:0;font-size:32px}
+.card{background:white;border-radius:16px;padding:20px;margin:20px 0;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.btn{display:inline-block;background:#21468B;color:white;padding:12px 24px;border-radius:30px;text-decoration:none;font-weight:bold;margin:8px}
+.btn.red{background:#AE1C28}
+.code{background:#1e1e2f;color:#e7e7ff;padding:16px;border-radius:10px;direction:ltr;text-align:left;overflow:auto;font-family:monospace;font-size:13px}
+.flag{font-size:64px}
+.badge{display:inline-block;background:#e3f2fd;color:#0d47a1;padding:4px 10px;border-radius:20px;font-size:12px}
+.warning{background:#fff3e0;border-left:5px solid #ff9800;padding:12px;border-radius:8px}
+.success{background:#e8f5e9;border-left:5px solid #4caf50;padding:12px;border-radius:8px}
+.step{border:2px dashed #ccc;padding:16px;border-radius:12px;margin:12px 0}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="flag">🇳🇱</div>
+    <h1>Netherlands VPN</h1>
+    <p>اپ اندروید واقعی بر پایه هسته v2rayNG - اتصال با یک کلیک و تغییر IP به هلند</p>
+    <span class="badge">بر پایه v2rayNG اصلی</span>
+    <span class="badge">VPN واقعی - نه فیک</span>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ کانفیگت را نفرستادی!</h2>
+    <div class="warning">
+      <b>تو گفتی "این کانفیگ رو" ولی هیچ لینکی در پیامت نبود.</b><br>
+      لطفا لینک سرور هلندت را بفرست مثل:<br>
+      <div class="code">vless://uuid@IP:443?security=tls&type=tcp#Netherlands<br>vmess://eyJhZGR...</div>
+      تا من همین الان داخل اپ بذارم و نسخه نهایی را بهت بدهم.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📦 داخل این پروژه چیست؟</h2>
+    <ul>
+      <li>✅ پروژه اندروید کامل <b>NetherlandsVPN/app/</b> قابل باز کردن در Android Studio</li>
+      <li>✅ سرویس <b>NLVpnService.kt</b> - سرویس VPN واقعی که TUN می‌سازد و ترافیک را به هلند می‌فرستد</li>
+      <li>✅ <b>MainActivity.kt</b> با طراحی پرچم هلند و نمایش IP واقعی بعد از اتصال</li>
+      <li>✅ فایل <b>V2RayConfig.kt</b> - فقط کانفیگ خودت را آنجا پیست کن</li>
+      <li>✅ <b>fork_v2rayng.py</b> - اگر می‌خواهی خود v2rayNG را به نام خودت ریبرند کنی</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🚀 چطور در 3 دقیقه APK بسازم؟</h2>
+    <div class="step">
+      <b>قدم 1:</b> Android Studio را باز کن → Open → پوشه NetherlandsVPN را انتخاب کن
+    </div>
+    <div class="step">
+      <b>قدم 2:</b> هسته v2ray را دانلود کن (فقط یک بار):<br>
+      برو به <a href="https://github.com/2dust/AndroidLibXrayLite/releases" target="_blank">AndroidLibXrayLite Releases</a> → فایل <b>libv2ray.aar</b> (حدود 20MB) را دانلود کن و بگذار در <span class="code">app/libs/</span> . اگر پوشه libs نیست بساز.
+      <div class="warning">چرا این فایل لازم است؟ چون هسته v2ray با Go نوشته شده و باید جداگانه کامپایل شود. پروژه اصلی v2rayNG هم همین کار را می‌کند.</div>
+    </div>
+    <div class="step">
+      <b>قدم 3:</b> فایل <span class="code">V2RayConfig.kt</span> را باز کن و خط 15 را ویرایش کن:<br>
+      <div class="code">const val NETHERLANDS_SERVER_URI = "vless://YOUR-UUID@YOUR_NL_IP:443#Netherlands"</div>
+      لینک واقعی خودت را بگذار.
+    </div>
+    <div class="step">
+      <b>قدم 4:</b> Build → Build APK → بعد از تمام شدن، فایل در <code>app/build/outputs/apk/debug/</code> است → روی گوشی نصب کن → دکمه "اتصال به هلند" را بزن → برو whatismyip.com → باید Amsterdam ببینی!
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔧 چطور IP واقعا عوض می‌شود؟ (مراحل فنی)</h2>
+    <p>این اپ دقیقا همان کاری را می‌کند که v2rayNG می‌کند:</p>
+    <ol>
+      <li>از کاربر مجوز <code>BIND_VPN_SERVICE</code> می‌گیرد - یک پنجره سیستمی اندروید</li>
+      <li>یک <b>TUN interface</b> به آدرس 10.10.10.1 می‌سازد و می‌گوید: همه ترافیک گوشی را به من بده</li>
+      <li>هسته libv2ray (Go) با کانفیگ هلند شما یک Socks روی 10808 اجرا می‌کند</li>
+      <li>ترافیک TUN به Socks می‌رود → از آنجا رمزگذاری شده به سرور هلند → سرور به اینترنت آزاد → سایت‌ها IP هلند را می‌بینند</li>
+    </ol>
+    <div class="success">این روش VPN واقعی اندروید است و IP شما 100% عوض می‌شود، نه DNS فیک.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎨 روش دوم: ریبرند کردن خود v2rayNG</h2>
+    <p>اگر می‌خواهی اپ شما دقیقا ظاهر v2rayNG را داشته باشد ولی با اسم و لوگوی هلند:</p>
+    <div class="code">python3 fork_v2rayng.py --config "vless://uuid@ip:port#Netherlands"</div>
+    <p>این اسکریپت پروژه اصلی را کلون، نام را عوض، و کانفیگ هلند را به assets اضافه می‌کند.</p>
+  </div>
+
+  <div class="card">
+    <h2>📩 مرحله آخر</h2>
+    <p>برای اینکه من همین الان پروژه نهایی را برایت آماده کنم:</p>
+    <p><b>کانفیگ VLESS/VMess هلندت را برام بفرست</b>. من:</p>
+    <ul>
+      <li>آن را داخل V2RayConfig.kt و assets/netherlands_config.json می‌گذارم</li>
+      <li>فایل JSON کامل v2ray را برایت می‌سازم</li>
+      <li>یک ویدیو یا دستورالعمل Build نهایی می‌دهم</li>
+    </ul>
+    <a class="btn" href="#">منتظر کانفیگ هستم 🇳🇱</a>
+  </div>
+
+</div>
+</body>
+</html>
